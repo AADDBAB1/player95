@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows 95 Media Player</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "MS Sans Serif", "Microsoft Sans Serif", Arial, sans-serif;
+    background: #008080;
+    overflow: hidden;
+}
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+#loginScreen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #008080;
+}
+
+.login-window {
+    width: 380px;
+    background: #c0c0c0;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    box-shadow: 3px 3px 0 #000;
+}
+
+.title-bar {
+    height: 26px;
+    background: #000080;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.title-icon {
+    margin-right: 7px;
+}
+
+.title-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 2px;
+}
+
+.title-button {
+    width: 18px;
+    height: 18px;
+    background: #c0c0c0;
+    color: #000;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-content {
+    padding: 20px;
+}
+
+.login-logo {
+    text-align: center;
+    font-size: 38px;
+    margin-bottom: 8px;
+}
+
+.login-heading {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.form-row label {
+    width: 100px;
+}
+
+.win-input {
+    flex: 1;
+    height: 24px;
+    border: 2px inset #fff;
+    background: white;
+    padding: 3px 5px;
+    outline: none;
+    font-family: inherit;
+}
+
+.win-button {
+    min-width: 80px;
+    height: 27px;
+    background: #c0c0c0;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.win-button:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.login-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+#errorMessage {
+    color: #800000;
+    text-align: center;
+    min-height: 18px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* =========================================================
+   PLAYER
+   ========================================================= */
+
+#playerScreen {
+    display: none;
+    width: 100%;
+    height: 100%;
+    padding: 18px;
+}
+
+.player-window {
+    width: min(1100px, 100%);
+    height: min(720px, 100%);
+    margin: auto;
+    background: #c0c0c0;
+
+    border-top: 3px solid white;
+    border-left: 3px solid white;
+    border-right: 3px solid #000;
+    border-bottom: 3px solid #000;
+
+    box-shadow: 4px 4px 0 #000;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title {
+    height: 27px;
+    background: linear-gradient(to right, #000080, #1084d0);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.main-title-icon {
+    margin-right: 7px;
+}
+
+.window-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 2px;
+    padding-right: 3px;
+}
+
+.menu-bar {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #808080;
+    padding-left: 4px;
+    font-size: 12px;
+}
+
+.menu-item {
+    padding: 4px 9px;
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background: #000080;
+    color: white;
+}
+
+.toolbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-bottom: 2px solid #808080;
+    gap: 4px;
+}
+
+.tool-button {
+    width: 31px;
+    height: 29px;
+    background: #c0c0c0;
+
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.tool-button:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.separator {
+    width: 2px;
+    height: 27px;
+    border-left: 1px solid #808080;
+    border-right: 1px solid white;
+    margin: 0 4px;
+}
+
+.main-area {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    padding: 6px;
+    gap: 6px;
+}
+
+.video-section {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    flex: 1;
+    min-height: 0;
+    background: #000;
+    border-top: 3px solid #404040;
+    border-left: 3px solid #404040;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#video {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+.fullscreen-exit {
+    display: none;
+    position: absolute;
+    z-index: 30;
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    padding: 10px 14px;
+    color: #fff;
+    background: rgba(0, 0, 0, .72);
+    border: 1px solid rgba(255, 255, 255, .75);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#audioDisplay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: #00ff00;
+    background: #000;
+    font-family: "Courier New", monospace;
+    text-align: center;
+}
+
+.audio-logo {
+    font-size: 70px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #00ff00;
+}
+
+.audio-title {
+    color: #00ff00;
+    font-size: 18px;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.visualizer {
+    display: flex;
+    gap: 4px;
+    height: 80px;
+    align-items: end;
+    margin-top: 20px;
+}
+
+.bar {
+    width: 7px;
+    background: #00ff00;
+    height: 10px;
+    box-shadow: 0 0 5px #00ff00;
+    animation: equalizer 0.7s infinite alternate;
+}
+
+.bar:nth-child(2) { animation-delay: .1s; }
+.bar:nth-child(3) { animation-delay: .2s; }
+.bar:nth-child(4) { animation-delay: .3s; }
+.bar:nth-child(5) { animation-delay: .4s; }
+.bar:nth-child(6) { animation-delay: .2s; }
+.bar:nth-child(7) { animation-delay: .5s; }
+.bar:nth-child(8) { animation-delay: .1s; }
+.bar:nth-child(9) { animation-delay: .3s; }
+.bar:nth-child(10) { animation-delay: .4s; }
+
+@keyframes equalizer {
+    from { height: 8px; }
+    to { height: 70px; }
+}
+
+#subtitleDisplay {
+    position: absolute;
+    bottom: 25px;
+    left: 5%;
+    right: 5%;
+    text-align: center;
+    color: white;
+    font-size: 19px;
+    font-weight: bold;
+    text-shadow:
+        2px 2px 0 #000,
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.playlist {
+    width: 280px;
+    background: #fff;
+    border-top: 3px solid #404040;
+    border-left: 3px solid #404040;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+    display: flex;
+    flex-direction: column;
+    min-width: 210px;
+}
+
+.playlist-title {
+    background: #000080;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.playlist-controls {
+    padding: 5px;
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid #808080;
+}
+
+.playlist-list {
+    flex: 1;
+    overflow-y: auto;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+}
+
+.playlist-item {
+    padding: 6px;
+    border-bottom: 1px dotted #808080;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.playlist-item:hover {
+    background: #d8d8d8;
+}
+
+.playlist-item.active {
+    background: #000080;
+    color: white;
+}
+
+.file-type {
+    display: inline-block;
+    width: 32px;
+    font-weight: bold;
+}
+
+.file-type.audio {
+    color: #008000;
+}
+
+.file-type.video {
+    color: #800000;
+}
+
+.controls {
+    padding: 5px 7px 3px;
+    border-top: 2px solid #808080;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.time {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    width: 42px;
+}
+
+.progress {
+    flex: 1;
+    height: 16px;
+    appearance: none;
+    background: #fff;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    cursor: pointer;
+}
+
+.progress::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px;
+    height: 16px;
+    background: #c0c0c0;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+}
+
+.bottom-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.control-button {
+    width: 36px;
+    height: 28px;
+    background: #c0c0c0;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    cursor: pointer;
+}
+
+.control-button:active {
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.volume {
+    margin-left: auto;
+    width: 100px;
+}
+
+.status-bar {
+    height: 25px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    gap: 4px;
+}
+
+.status-panel {
+    height: 19px;
+    border-top: 1px solid #808080;
+    border-left: 1px solid #808080;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    padding: 2px 6px;
+    font-size: 11px;
+}
+
+.status-main {
+    flex: 1;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+/* Tela cheia: o player inteiro ocupa a tela e os controles ficam sobre o vídeo */
+.player-window:fullscreen {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+}
+.player-window:fullscreen .main-title,
+.player-window:fullscreen .menu-bar,
+.player-window:fullscreen .toolbar,
+.player-window:fullscreen .playlist,
+.player-window:fullscreen .status-bar {
+    display: none !important;
+}
+.player-window:fullscreen .main-area {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    display: block;
+    background: #000;
+}
+.player-window:fullscreen .video-section {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.player-window:fullscreen .screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+.player-window:fullscreen #video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.player-window:fullscreen .fullscreen-exit {
+    display: block;
+    transition: opacity .25s ease;
+}
+.player-window:fullscreen .controls {
+    position: absolute;
+    z-index: 20;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px 10px max(12px, env(safe-area-inset-bottom));
+    color: white;
+    background: linear-gradient(transparent, rgba(0,0,0,.88));
+    transition: opacity .25s ease;
+}
+.player-window:fullscreen.controls-hidden .controls,
+.player-window:fullscreen.controls-hidden .fullscreen-exit {
+    opacity: 0;
+    pointer-events: none;
+}
+.player-window:fullscreen #subtitleDisplay {
+    bottom: 85px;
+}
+
+/* Layout adaptado a celulares em pé */
+@media (max-width: 750px) {
+    html, body {
+        min-height: 100%;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    #playerScreen {
+        padding: 5px;
+        height: auto;
+        min-height: 100dvh;
+    }
+    .player-window {
+        width: 100%;
+        height: auto;
+        min-height: calc(100dvh - 10px);
+    }
+    .main-area {
+        flex-direction: column;
+        flex: initial;
+        min-height: 0;
+    }
+    .video-section {
+        width: 100%;
+        flex: none;
+    }
+    .screen {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        flex: none;
+        min-height: 190px;
+    }
+    .playlist {
+        width: 100%;
+        min-width: 0;
+        height:  min(42dvh, 360px);
+        min-height: 260px;
+        flex: none;
+    }
+    .playlist-list {
+        min-height: 180px;
+        font-size: 14px;
+    }
+    .playlist-item {
+        padding: 10px 8px;
+    }
+    .volume {
+        width: min(24vw, 100px);
+    }
+}
+@media (max-width: 750px) and (orientation: portrait) {
+    .login-window {
+        width: min(380px, calc(100vw - 24px));
+    }
+    .player-window:fullscreen .controls {
+        padding-bottom: max(18px, env(safe-area-inset-bottom));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     LOGIN
+     ======================================================== -->
+
+<div id="loginScreen">
+
+    <div class="login-window">
+
+        <div class="title-bar">
+            <span class="title-icon">💿</span>
+            Windows 95 Media Player
+            <div class="title-buttons">
+                <div class="title-button">_</div>
+                <div class="title-button">□</div>
+                <div class="title-button">×</div>
+            </div>
+        </div>
+
+        <div class="login-content">
+
+            <div class="login-logo">📼</div>
+
+            <div class="login-heading">
+                Windows 95 Media Player
+            </div>
+
+            <div class="form-row">
+                <label for="username">Usuário:</label>
+                <input
+                    id="username"
+                    class="win-input"
+                    type="text"
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="form-row">
+                <label for="password">Senha:</label>
+                <input
+                    id="password"
+                    class="win-input"
+                    type="password"
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <div id="errorMessage"></div>
+
+            <div class="login-buttons">
+                <button class="win-button" onclick="login()">
+                    OK
+                </button>
+
+                <button class="win-button" onclick="clearLogin()">
+                    Cancelar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- =======================================================
+     PLAYER
+     ======================================================== -->
+
+<div id="playerScreen">
+
+    <div class="player-window">
+
+        <!-- TITLE -->
+        <div class="main-title">
+
+            <span class="main-title-icon">📼</span>
+
+            Windows 95 Media Player
+
+            <div class="window-buttons">
+                <div class="title-button">_</div>
+                <div class="title-button">□</div>
+                <div class="title-button">×</div>
+            </div>
+
+        </div>
+
+        <!-- MENU -->
+        <div class="menu-bar">
+
+            <div class="menu-item" onclick="addMedia()">
+                Arquivo
+            </div>
+
+            <div class="menu-item" onclick="addSubtitle()">
+                Legenda
+            </div>
+
+            <div class="menu-item" onclick="showAbout()">
+                Ajuda
+            </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+
+            <button class="tool-button" onclick="previousMedia()" title="Anterior">
+                ⏮
+            </button>
+
+            <button class="tool-button" onclick="togglePlay()" title="Reproduzir/Pausar">
+                ▶
+            </button>
+
+            <button class="tool-button" onclick="stopMedia()" title="Parar">
+                ■
+            </button>
+
+            <button class="tool-button" onclick="nextMedia()" title="Próximo">
+                ⏭
+            </button>
+
+            <div class="separator"></div>
+
+            <button class="tool-button" onclick="addMedia()" title="Adicionar arquivos">
+                📂
+            </button>
+
+            <button class="tool-button" onclick="addSubtitle()" title="Adicionar legenda">
+                💬
+            </button>
+
+            <button class="tool-button" onclick="toggleFullscreen()" title="Tela cheia">
+                ⛶
+            </button>
+
+            <input
+                id="mediaFiles"
+                type="file"
+                multiple
+                accept="audio/*,video/*"
+                class="hidden"
+                onchange="handleMediaFiles(event)"
+            >
+
+            <input
+                id="subtitleFile"
+                type="file"
+                accept=".vtt,.srt,text/vtt,text/plain"
+                class="hidden"
+                onchange="handleSubtitle(event)"
+            >
+
+        </div>
+
+        <!-- MAIN -->
+        <div class="main-area">
+
+            <!-- VIDEO / AUDIO -->
+            <div class="video-section">
+
+                <div class="screen" id="screen">
+
+                    <video id="video" controlsList="nodownload"></video>
+
+                    <button class="fullscreen-exit" type="button" onclick="exitFullscreen()" title="Sair da tela cheia">✕ Sair da tela cheia</button>
+
+                    <div id="audioDisplay">
+
+                        <div class="audio-logo">
+                            ♪
+                        </div>
+
+                        <div class="audio-title" id="audioTitle">
+                            Nenhuma música selecionada
+                        </div>
+
+                        <div class="visualizer">
+
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+
+                        </div>
+
+                    </div>
+
+                    <div id="subtitleDisplay"></div>
+
+                </div>
+
+                <!-- CONTROLES -->
+                <div class="controls">
+
+                    <div class="progress-container">
+
+                        <span class="time" id="currentTime">
+                            00:00
+                        </span>
+
+                        <input
+                            type="range"
+                            id="progress"
+                            class="progress"
+                            min="0"
+                            max="100"
+                            value="0"
+                        >
+
+                        <span class="time" id="duration">
+                            00:00
+                        </span>
+
+                    </div>
+
+                    <div class="bottom-controls">
+
+                        <button
+                            class="control-button"
+                            onclick="previousMedia()"
+                            title="Anterior"
+                        >
+                            ⏮
+                        </button>
+
+                        <button
+                            class="control-button"
+                            onclick="togglePlay()"
+                            id="playButton"
+                            title="Reproduzir"
+                        >
+                            ▶
+                        </button>
+
+                        <button
+                            class="control-button"
+                            onclick="stopMedia()"
+                            title="Parar"
+                        >
+                            ■
+                        </button>
+
+                        <button
+                            class="control-button"
+                            onclick="nextMedia()"
+                            title="Próximo"
+                        >
+                            ⏭
+                        </button>
+
+                        <span>🔊</span>
+
+                        <input
+                            type="range"
+                            id="volume"
+                            class="volume"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            value="1"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PLAYLIST -->
+            <div class="playlist">
+
+                <div class="playlist-title">
+                    LISTA DE REPRODUÇÃO
+                </div>
+
+                <div class="playlist-controls">
+
+                    <button
+                        class="win-button"
+                        onclick="addMedia()"
+                    >
+                        Adicionar
+                    </button>
+
+                    <button
+                        class="win-button"
+                        onclick="clearPlaylist()"
+                    >
+                        Limpar
+                    </button>
+
+                </div>
+
+                <div
+                    class="playlist-list"
+                    id="playlist"
+                ></div>
+
+            </div>
+
+        </div>
+
+        <!-- STATUS -->
+        <div class="status-bar">
+
+            <div
+                class="status-panel status-main"
+                id="status"
+            >
+                Pronto.
+            </div>
+
+            <div
+                class="status-panel"
+                id="mediaType"
+            >
+                Nenhuma mídia
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÕES
+   ========================================================= */
+
+const USERNAME = "root";
+const PASSWORD = "toor";
+
+let mediaList = [];
+let currentIndex = -1;
+
+let subtitles = [];
+let currentSubtitleURL = null;
+
+const video = document.getElementById("video");
+const audioDisplay = document.getElementById("audioDisplay");
+const audioTitle = document.getElementById("audioTitle");
+const subtitleDisplay = document.getElementById("subtitleDisplay");
+
+const playlist = document.getElementById("playlist");
+
+const progress = document.getElementById("progress");
+const volume = document.getElementById("volume");
+
+const currentTime = document.getElementById("currentTime");
+const duration = document.getElementById("duration");
+
+const playButton = document.getElementById("playButton");
+
+const status = document.getElementById("status");
+const mediaType = document.getElementById("mediaType");
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+function login() {
+
+    const username =
+        document.getElementById("username").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("errorMessage");
+
+    if (
+        username === USERNAME &&
+        password === PASSWORD
+    ) {
+
+        document.getElementById("loginScreen").style.display =
+            "none";
+
+        document.getElementById("playerScreen").style.display =
+            "block";
+
+        status.textContent =
+            "Login efetuado. Selecione uma mídia.";
+
+    } else {
+
+        error.textContent =
+            "Usuário ou senha incorretos!";
+
+        document.getElementById("password").value = "";
+
+    }
+}
+
+function clearLogin() {
+
+    document.getElementById("username").value = "";
+
+    document.getElementById("password").value = "";
+
+    document.getElementById("errorMessage").textContent = "";
+
+}
+
+/* Enter para fazer login */
+
+document.getElementById("password")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    });
+
+document.getElementById("username")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    });
+
+/* =========================================================
+   ADICIONAR MÍDIA
+   ========================================================= */
+
+function addMedia() {
+
+    document.getElementById("mediaFiles").click();
+
+}
+
+function handleMediaFiles(event) {
+
+    const files = Array.from(event.target.files);
+
+    if (!files.length) return;
+
+    files.forEach(file => {
+
+        const type =
+            file.type.startsWith("video")
+                ? "video"
+                : "audio";
+
+        mediaList.push({
+            file: file,
+            url: URL.createObjectURL(file),
+            type: type
+        });
+
+    });
+
+    updatePlaylist();
+
+    if (currentIndex === -1) {
+
+        loadMedia(0);
+
+    }
+
+    event.target.value = "";
+
+}
+
+/* =========================================================
+   PLAYLIST
+   ========================================================= */
+
+function updatePlaylist() {
+
+    playlist.innerHTML = "";
+
+    mediaList.forEach((media, index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "playlist-item";
+
+        if (index === currentIndex) {
+            item.classList.add("active");
+        }
+
+        const type =
+            media.type === "video"
+                ? "MP4"
+                : "MP3";
+
+        item.innerHTML =
+            `<span class="file-type ${media.type}">
+                ${type}
+             </span>
+             ${escapeHTML(media.file.name)}`;
+
+        item.onclick = function() {
+            loadMedia(index);
+        };
+
+        playlist.appendChild(item);
+
+    });
+
+}
+
+function clearPlaylist() {
+
+    mediaList.forEach(media => {
+
+        URL.revokeObjectURL(media.url);
+
+    });
+
+    mediaList = [];
+
+    currentIndex = -1;
+
+    video.pause();
+
+    video.removeAttribute("src");
+
+    video.load();
+
+    audioDisplay.style.display = "none";
+
+    subtitleDisplay.textContent = "";
+
+    updatePlaylist();
+
+    status.textContent =
+        "Lista de reprodução vazia.";
+
+    mediaType.textContent =
+        "Nenhuma mídia";
+
+}
+
+/* =========================================================
+   CARREGAR MÍDIA
+   ========================================================= */
+
+function loadMedia(index) {
+
+    if (
+        index < 0 ||
+        index >= mediaList.length
+    ) {
+        return;
+    }
+
+    currentIndex = index;
+
+    const media =
+        mediaList[index];
+
+    video.pause();
+
+    video.removeAttribute("src");
+
+    video.load();
+
+    subtitleDisplay.textContent = "";
+
+    if (currentSubtitleURL) {
+
+        URL.revokeObjectURL(
+            currentSubtitleURL
+        );
+
+        currentSubtitleURL = null;
+
+    }
+
+    subtitles = [];
+
+    if (media.type === "video") {
+
+        video.style.display = "block";
+
+        audioDisplay.style.display = "none";
+
+        video.src = media.url;
+
+        mediaType.textContent =
+            "Vídeo";
+
+    } else {
+
+        video.style.display = "none";
+
+        audioDisplay.style.display = "flex";
+
+        audioTitle.textContent =
+            media.file.name;
+
+        /*
+         * O elemento <video> também consegue
+         * reproduzir áudio, portanto usamos
+         * o mesmo elemento para ambos.
+         */
+
+        video.src = media.url;
+
+        mediaType.textContent =
+            "Áudio";
+
+    }
+
+    updatePlaylist();
+
+    status.textContent =
+        "Carregado: " + media.file.name;
+
+    video.load();
+
+}
+
+/* =========================================================
+   CONTROLES
+   ========================================================= */
+
+function togglePlay() {
+
+    if (!video.src) {
+
+        status.textContent =
+            "Nenhuma mídia selecionada.";
+
+        return;
+
+    }
+
+    if (video.paused) {
+
+        video.play();
+
+        playButton.textContent = "❚❚";
+
+    } else {
+
+        video.pause();
+
+        playButton.textContent = "▶";
+
+    }
+
+}
+
+function stopMedia() {
+
+    video.pause();
+
+    video.currentTime = 0;
+
+    playButton.textContent = "▶";
+
+}
+
+function previousMedia() {
+
+    if (!mediaList.length) return;
+
+    let index =
+        currentIndex - 1;
+
+    if (index < 0) {
+        index = mediaList.length - 1;
+    }
+
+    loadMedia(index);
+
+    video.play();
+
+}
+
+function nextMedia() {
+
+    if (!mediaList.length) return;
+
+    let index =
+        currentIndex + 1;
+
+    if (index >= mediaList.length) {
+        index = 0;
+    }
+
+    loadMedia(index);
+
+    video.play();
+
+}
+
+/* =========================================================
+   PROGRESSO
+   ========================================================= */
+
+video.addEventListener("timeupdate", function() {
+
+    if (!video.duration) return;
+
+    progress.value =
+        (video.currentTime / video.duration) * 100;
+
+    currentTime.textContent =
+        formatTime(video.currentTime);
+
+    updateSubtitle();
+
+});
+
+video.addEventListener("loadedmetadata", function() {
+
+    duration.textContent =
+        formatTime(video.duration);
+
+});
+
+progress.addEventListener("input", function() {
+
+    if (!video.duration) return;
+
+    video.currentTime =
+        (progress.value / 100) *
+        video.duration;
+
+});
+
+volume.addEventListener("input", function() {
+
+    video.volume =
+        volume.value;
+
+});
+
+video.addEventListener("play", function() {
+
+    playButton.textContent = "❚❚";
+
+});
+
+video.addEventListener("pause", function() {
+
+    playButton.textContent = "▶";
+
+});
+
+video.addEventListener("ended", function() {
+
+    playButton.textContent = "▶";
+
+    if (mediaList.length > 1) {
+
+        nextMedia();
+
+    }
+
+});
+
+/* =========================================================
+   TECLAS DE ATALHO
+   ========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+    /*
+     * Não executar atalhos enquanto
+     * o usuário estiver digitando no login.
+     */
+
+    if (
+        document.activeElement.tagName === "INPUT" &&
+        document.getElementById("loginScreen").style.display !== "none"
+    ) {
+        return;
+    }
+
+    if (event.code === "Space") {
+
+        event.preventDefault();
+
+        togglePlay();
+
+    }
+
+    if (event.code === "ArrowRight") {
+
+        video.currentTime += 5;
+
+    }
+
+    if (event.code === "ArrowLeft") {
+
+        video.currentTime -= 5;
+
+    }
+
+    if (event.code === "ArrowUp") {
+
+        event.preventDefault();
+
+        video.volume =
+            Math.min(1, video.volume + 0.05);
+
+        volume.value =
+            video.volume;
+
+    }
+
+    if (event.code === "ArrowDown") {
+
+        event.preventDefault();
+
+        video.volume =
+            Math.max(0, video.volume - 0.05);
+
+        volume.value =
+            video.volume;
+
+    }
+
+});
+
+/* =========================================================
+   LEGENDAS
+   ========================================================= */
+
+function addSubtitle() {
+
+    if (!mediaList.length) {
+
+        alert(
+            "Primeiro adicione uma música ou vídeo."
+        );
+
+        return;
+
+    }
+
+    document.getElementById("subtitleFile").click();
+
+}
+
+async function handleSubtitle(event) {
+
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const text =
+        await file.text();
+
+    if (
+        file.name.toLowerCase().endsWith(".srt")
+    ) {
+
+        subtitles =
+            parseSRT(text);
+
+    } else {
+
+        subtitles =
+            parseVTT(text);
+
+    }
+
+    status.textContent =
+        "Legenda carregada: " +
+        file.name;
+
+    event.target.value = "";
+
+}
+
+/* =========================================================
+   SRT
+   ========================================================= */
+
+function parseSRT(text) {
+
+    const blocks =
+        text.replace(/\r/g, "")
+            .split(/\n\n+/);
+
+    const result = [];
+
+    blocks.forEach(block => {
+
+        const lines =
+            block.split("\n");
+
+        if (lines.length < 2) return;
+
+        let timeLineIndex = 0;
+
+        if (
+            !lines[0].includes("-->")
+        ) {
+            timeLineIndex = 1;
+        }
+
+        const timeLine =
+            lines[timeLineIndex];
+
+        if (!timeLine || !timeLine.includes("-->")) {
+            return;
+        }
+
+        const times =
+            timeLine.split("-->");
+
+        const start =
+            parseSubtitleTime(times[0].trim());
+
+        const end =
+            parseSubtitleTime(times[1].trim());
+
+        const caption =
+            lines
+                .slice(timeLineIndex + 1)
+                .join("<br>");
+
+        result.push({
+            start: start,
+            end: end,
+            text: caption
+        });
+
+    });
+
+    return result;
+
+}
+
+/* =========================================================
+   VTT
+   ========================================================= */
+
+function parseVTT(text) {
+
+    const blocks =
+        text.replace(/\r/g, "")
+            .split(/\n\n+/);
+
+    const result = [];
+
+    blocks.forEach(block => {
+
+        const lines =
+            block.split("\n");
+
+        let timeLineIndex =
+            lines.findIndex(
+                line => line.includes("-->")
+            );
+
+        if (timeLineIndex === -1) return;
+
+        const timeLine =
+            lines[timeLineIndex];
+
+        const times =
+            timeLine.split("-->");
+
+        const start =
+            parseSubtitleTime(times[0].trim());
+
+        const end =
+            parseSubtitleTime(times[1].trim());
+
+        const caption =
+            lines
+                .slice(timeLineIndex + 1)
+                .join("<br>");
+
+        result.push({
+            start: start,
+            end: end,
+            text: caption
+        });
+
+    });
+
+    return result;
+
+}
+
+/* =========================================================
+   TEMPO DA LEGENDA
+   ========================================================= */
+
+function parseSubtitleTime(time) {
+
+    time =
+        time.replace(",", ".");
+
+    const parts =
+        time.split(":");
+
+    if (parts.length === 3) {
+
+        return (
+            parseFloat(parts[0]) * 3600 +
+            parseFloat(parts[1]) * 60 +
+            parseFloat(parts[2])
+        );
+
+    }
+
+    if (parts.length === 2) {
+
+        return (
+            parseFloat(parts[0]) * 60 +
+            parseFloat(parts[1])
+        );
+
+    }
+
+    return 0;
+
+}
+
+/* =========================================================
+   EXIBIR LEGENDA
+   ========================================================= */
+
+function updateSubtitle() {
+
+    if (!subtitles.length) {
+
+        subtitleDisplay.textContent = "";
+
+        return;
+
+    }
+
+    const time =
+        video.currentTime;
+
+    const subtitle =
+        subtitles.find(
+            sub =>
+                time >= sub.start &&
+                time <= sub.end
+        );
+
+    if (subtitle) {
+
+        subtitleDisplay.innerHTML =
+            subtitle.text;
+
+    } else {
+
+        subtitleDisplay.innerHTML = "";
+
+    }
+
+}
+
+/* =========================================================
+   TELA CHEIA
+   ========================================================= */
+
+let controlsHideTimer = null;
+const playerWindow = document.querySelector(".player-window");
+
+function showFullscreenControls() {
+    if (!document.fullscreenElement || document.fullscreenElement !== playerWindow) return;
+
+    playerWindow.classList.remove("controls-hidden");
+    clearTimeout(controlsHideTimer);
+
+    controlsHideTimer = setTimeout(() => {
+        if (document.fullscreenElement === playerWindow) {
+            playerWindow.classList.add("controls-hidden");
+        }
+    }, 5000);
+}
+
+function exitFullscreen() {
+    clearTimeout(controlsHideTimer);
+    if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        const request = playerWindow.requestFullscreen();
+        if (request && typeof request.then === "function") {
+            request.then(() => {
+                showFullscreenControls();
+                // Alguns navegadores móveis permitem bloquear a orientação em tela cheia.
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock("portrait").catch(() => {});
+                }
+            }).catch(() => {
+                status.textContent = "Não foi possível ativar a tela cheia neste navegador.";
+            });
+        }
+    } else {
+        clearTimeout(controlsHideTimer);
+        document.exitFullscreen();
+    }
+}
+
+playerWindow.addEventListener("pointerdown", () => {
+    if (document.fullscreenElement === playerWindow) showFullscreenControls();
+});
+playerWindow.addEventListener("mousemove", () => {
+    if (document.fullscreenElement === playerWindow) showFullscreenControls();
+});
+document.addEventListener("fullscreenchange", () => {
+    clearTimeout(controlsHideTimer);
+    if (document.fullscreenElement === playerWindow) {
+        showFullscreenControls();
+    } else {
+        playerWindow.classList.remove("controls-hidden");
+        if (screen.orientation && screen.orientation.unlock) {
+            try { screen.orientation.unlock(); } catch (error) {}
+        }
+    }
+});
+
+/* =========================================================
+   AJUDA
+   ========================================================= */
+
+function showAbout() {
+
+    alert(
+        "Windows 95 Media Player\n\n" +
+        "Player retrô desenvolvido em HTML, CSS e JavaScript.\n\n" +
+        "Usuário: root\n" +
+        "Senha: toor\n\n" +
+        "Suporta múltiplos arquivos de áudio/vídeo " +
+        "e legendas SRT/VTT."
+    );
+
+}
+
+/* =========================================================
+   UTILITÁRIOS
+   ========================================================= */
+
+function formatTime(seconds) {
+
+    if (!Number.isFinite(seconds)) {
+        return "00:00";
+    }
+
+    seconds =
+        Math.floor(seconds);
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(secs).padStart(2, "0")
+    );
+
+}
+
+function escapeHTML(text) {
+
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+/* =========================================================
+   INICIALIZAÇÃO
+   ========================================================= */
+
+video.volume = 1;
+
+</script>
+
+</body>
+</html>
+```
+
+ **Observação:** como o projeto roda inteiramente no navegador, os arquivos de MP3/MP4 e as legendas são carregados localmente pelo usuário e não são enviados para nenhum servidor. Para legendas de música, o `.srt`/`.vtt` é exibido sobre a área do player enquanto o áudio toca.
