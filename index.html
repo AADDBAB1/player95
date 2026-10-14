@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Windows 95 Media Player</title>
+
+<link href="style.css" rel="stylesheet"/></head>
+<body>
+<!-- =======================================================
+     LOGIN
+     ======================================================== -->
+<div id="loginScreen">
+<div class="login-window">
+<div class="title-bar">
+<span class="title-icon">💿</span>
+            Windows 95 Media Player
+            <div class="title-buttons">
+<div class="title-button">_</div>
+<div class="title-button">□</div>
+<div class="title-button">×</div>
+</div>
+</div>
+<div class="login-content">
+<div class="login-logo">📼</div>
+<div class="login-heading">
+                Windows 95 Media Player
+            </div>
+<div class="form-row">
+<label for="username">Usuário:</label>
+<input autocomplete="username" class="win-input" id="username" type="text"/>
+</div>
+<div class="form-row">
+<label for="password">Senha:</label>
+<input autocomplete="current-password" class="win-input" id="password" type="password"/>
+</div>
+<div id="errorMessage"></div>
+<div class="login-buttons">
+<button class="win-button" onclick="login()">
+                    OK
+                </button>
+<button class="win-button" onclick="clearLogin()">
+                    Cancelar
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- =======================================================
+     PLAYER
+     ======================================================== -->
+<div id="playerScreen">
+<div class="player-window">
+<!-- TITLE -->
+<div class="main-title">
+<span class="main-title-icon">📼</span>
+
+            Windows 95 Media Player
+
+            <div class="window-buttons">
+<div class="title-button">_</div>
+<div class="title-button">□</div>
+<div class="title-button">×</div>
+</div>
+</div>
+<!-- MENU -->
+<div class="menu-bar">
+<div class="menu-item" onclick="addMedia()">
+                Arquivo
+            </div>
+<div class="menu-item" onclick="addSubtitle()">
+                Legenda
+            </div>
+<div class="menu-item" onclick="showAbout()">
+                Ajuda
+            </div>
+</div>
+<!-- TOOLBAR -->
+<div class="toolbar">
+<button class="tool-button" onclick="previousMedia()" title="Anterior">
+                ⏮
+            </button>
+<button class="tool-button" onclick="togglePlay()" title="Reproduzir/Pausar">
+                ▶
+            </button>
+<button class="tool-button" onclick="stopMedia()" title="Parar">
+                ■
+            </button>
+<button class="tool-button" onclick="nextMedia()" title="Próximo">
+                ⏭
+            </button>
+<div class="separator"></div>
+<button class="tool-button" onclick="addMedia()" title="Adicionar arquivos">
+                📂
+            </button>
+<button class="tool-button" onclick="addSubtitle()" title="Adicionar legenda">
+                💬
+            </button>
+<button class="tool-button" onclick="toggleFullscreen()" title="Tela cheia">
+                ⛶
+            </button>
+<input accept="audio/*,video/*" class="hidden" id="mediaFiles" multiple="" onchange="handleMediaFiles(event)" type="file"/>
+<input accept=".vtt,.srt,text/vtt,text/plain" class="hidden" id="subtitleFile" onchange="handleSubtitle(event)" type="file"/>
+</div>
+<!-- MAIN -->
+<div class="main-area">
+<!-- VIDEO / AUDIO -->
+<div class="video-section">
+<div class="screen" id="screen">
+<video controlslist="nodownload" id="video"></video>
+<button class="fullscreen-exit" onclick="exitFullscreen()" title="Sair da tela cheia" type="button">✕ Sair da tela cheia</button>
+<div id="audioDisplay">
+<div class="audio-logo">
+                            ♪
+                        </div>
+<div class="audio-title" id="audioTitle">
+                            Nenhuma música selecionada
+                        </div>
+<div class="visualizer">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+</div>
+<div id="subtitleDisplay"></div>
+</div>
+<!-- CONTROLES -->
+<div class="controls">
+<div class="progress-container">
+<span class="time" id="currentTime">
+                            00:00
+                        </span>
+<input class="progress" id="progress" max="100" min="0" type="range" value="0"/>
+<span class="time" id="duration">
+                            00:00
+                        </span>
+</div>
+<div class="bottom-controls">
+<button class="control-button" onclick="previousMedia()" title="Anterior">
+                            ⏮
+                        </button>
+<button class="control-button" id="playButton" onclick="togglePlay()" title="Reproduzir">
+                            ▶
+                        </button>
+<button class="control-button" onclick="stopMedia()" title="Parar">
+                            ■
+                        </button>
+<button class="control-button" onclick="nextMedia()" title="Próximo">
+                            ⏭
+                        </button>
+<span>🔊</span>
+<input class="volume" id="volume" max="1" min="0" step="0.01" type="range" value="1"/>
+</div>
+</div>
+</div>
+<!-- PLAYLIST -->
+<div class="playlist">
+<div class="playlist-title">
+                    LISTA DE REPRODUÇÃO
+                </div>
+<div class="playlist-controls">
+<button class="win-button" onclick="addMedia()">
+                        Adicionar
+                    </button>
+<button class="win-button" onclick="clearPlaylist()">
+                        Limpar
+                    </button>
+</div>
+<div class="playlist-list" id="playlist"></div>
+</div>
+</div>
+<!-- STATUS -->
+<div class="status-bar">
+<div class="status-panel status-main" id="status">
+                Pronto.
+            </div>
+<div class="status-panel" id="mediaType">
+                Nenhuma mídia
+            </div>
+</div>
+</div>
+</div>
+
+<script defer="True" src="script.js"></script></body>
+</html>
+```
+
+ **Observação:** como o projeto roda inteiramente no navegador, os arquivos de MP3/MP4 e as legendas são carregados localmente pelo usuário e não são enviados para nenhum servidor. Para legendas de música, o `.srt`/`.vtt` é exibido sobre a área do player enquanto o áudio toca.
